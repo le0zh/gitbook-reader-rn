@@ -22,7 +22,7 @@ export default class NewsCard extends React.PureComponent {
             <Text style={styles.title}>{this.props.title}</Text>
 
             <Text numberOfLines={2} ellipsizeMode="tail" style={styles.desc}>
-              {this.props.description === '' ? 'no description for now' : this.props.description}
+              {this.props.description === '' ? 'No description for now' : this.props.description}
             </Text>
 
             <Text>Last updated {moment(this.props.dates.build).fromNow()}</Text>
@@ -40,13 +40,12 @@ export default class NewsCard extends React.PureComponent {
 
 const styles = StyleSheet.create({
   row: {
-    height: px2dp(300),
+    height: px2dp(320),
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'flex-start',
     backgroundColor: '#fff',
     padding: 10,
-    // paddingBottom: 0,
   },
 
   cover: {
@@ -91,7 +90,7 @@ const styles = StyleSheet.create({
 
   infoWrapper: {
     position: 'absolute',
-    right: 0,
+    right: -10,
     bottom: 0,
     flexDirection: 'row',
   },

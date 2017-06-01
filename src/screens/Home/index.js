@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, ActivityIndicator, Text, StyleSheet, ScrollView, StatusBar, FlatList } from 'react-native';
-import ScrollableTabView from 'react-native-scrollable-tab-view';
 
 import { px2dp, SCREEN_WIDTH } from '../../utils';
 

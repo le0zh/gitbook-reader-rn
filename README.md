@@ -1,18 +1,7 @@
-## gank.io RN client
+## GitBook阅读器
 
-### ScreenShots :heart:
+使用ReactNative开发的GitBoo阅读器，可以查看在线的书籍信息，在线阅读和下载。
 
-![img](./docs/Screenshot_2017-05-31-14-51-31-473_com.gitbookreader.png)
+目前仅适配了Android端，iOS待适配。
 
-![img](./docs/Screenshot_2017-05-31-14-51-47-107_com.gitbookreader.png)
 
-![img](./docs/Screenshot_2017-05-31-14-51-53-282_com.gitbookreader.png)
-
-### Run
-
-1. npm install
-2. npm start
-
-### Release
-
-The release apk is under `target` folder.
