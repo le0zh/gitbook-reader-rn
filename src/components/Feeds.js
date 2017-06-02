@@ -48,7 +48,6 @@ export default class Feeds extends React.Component {
       const { page } = this.state;
 
       getAllBooks(page).then(res => {
-        console.log(res);
         this.setState({
           data: page === 0 ? res.list : [...this.state.data, ...res.list],
           loading: false,
@@ -112,7 +111,6 @@ export default class Feeds extends React.Component {
       );
     }
 
-    // ItemSeparatorComponent={this._renderItemSeparator}
     return (
       <View style={styles.wrapper}>
         <FlatList

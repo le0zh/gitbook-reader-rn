@@ -16,30 +16,30 @@ Navigation.startTabBasedApp({
     {
       label: 'Explore',
       screen: 'app.Home', // this is a registered name for a screen
-      icon: require('./src/img/ic_local_cafe.png'),
-      selectedIcon: require('./src/img/ic_local_cafe.png'), // iOS only
+      icon: require('./src/img/book.png'),
+      selectedIcon: require('./src/img/book.png'), // iOS only
       title: 'Explore',
     },
     {
-      label: '干货',
-      screen: 'app.Home', // this is a registered name for a screen
-      icon: require('./src/img/ic_news.png'),
-      selectedIcon: require('./src/img/ic_news.png'), // iOS only
-      title: '干货集中营',
+      label: 'Search',
+      screen: 'app.Empty', // this is a registered name for a screen
+      icon: require('./src/img/search.png'),
+      selectedIcon: require('./src/img/search.png'), // iOS only
+      title: 'Search',
     },
-    // {
-    //   label: '视频',
-    //   screen: 'app.Video',
-    //   icon: require('./src/img/ic_video.png'),
-    //   selectedIcon: require('./src/img/ic_video.png'), // iOS only
-    //   title: '休息视频',
-    // },
     {
-      label: '福利',
-      screen: 'app.Home',
-      icon: require('./src/img/ic_pics.png'),
-      selectedIcon: require('./src/img/ic_pics.png'), // iOS only
-      title: '福利',
+      label: 'Hisotry',
+      screen: 'app.Empty',
+      icon: require('./src/img/history.png'),
+      selectedIcon: require('./src/img/history.png'), // iOS only
+      title: 'Hisotry',
+    },
+    {
+      label: 'Download',
+      screen: 'app.Empty',
+      icon: require('./src/img/download.png'),
+      selectedIcon: require('./src/img/download.png'), // iOS only
+      title: 'Download',
     },
   ],
   appStyle: {

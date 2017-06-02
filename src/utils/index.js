@@ -30,3 +30,18 @@ exports.stringFormat = function stringFormat(template: string, ...values: any): 
 const { width, height } = Dimensions.get('window');
 exports.SCREEN_WIDTH = width;
 exports.SCREEN_HEIGHT = height;
+
+let currentBookCover = '';
+/**
+ * 暂存当前书的封面
+ */
+exports.saveBookCover = function(cover) {
+  currentBookCover = cover;
+};
+
+/**
+ * 获取暂存的当前书的封面
+ */
+exports.getBookCover = function() {
+  return currentBookCover;
+};

@@ -3,6 +3,7 @@ import { Image, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-na
 import moment from 'moment';
 
 import { px2dp, SCREEN_WIDTH } from '../../utils';
+import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 
 // var zh = require('moment/locale/zh-cn');
 // moment.updateLocale('zh-cn', zh);
@@ -10,13 +11,15 @@ import { px2dp, SCREEN_WIDTH } from '../../utils';
 
 export default class NewsCard extends React.PureComponent {
   render() {
-    // <Text>@{this.props.author.username}</Text>
     return (
       <TouchableNativeFeedback onPress={this.props.onPress}>
         <View style={styles.row}>
           <View style={styles.cover}>
-            <Image style={styles.coverImage} source={require('../../img/default-cover.png')} />
-            <Image style={styles.coverImage} source={{ uri: `http://www.gitbook.com${this.props.cover.small}` }} />
+            <ImageWithPlaceHolder
+              style={styles.coverImage}
+              placeHolderSource={require('../../img/default-cover.png')}
+              source={{ uri: `http://www.gitbook.com${this.props.cover.small}` }}
+            />
           </View>
           <View style={styles.content}>
             <Text style={styles.title}>{this.props.title}</Text>
