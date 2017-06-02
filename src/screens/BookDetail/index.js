@@ -6,6 +6,7 @@ import { px2dp, SCREEN_WIDTH } from '../../utils';
 import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 import Badge from './Badge';
 import Readme from './Readme';
+import { saveReadHistory } from '../../data';
 
 export default class BookDetail extends React.PureComponent {
   static navigatorStyle = {
@@ -38,6 +39,9 @@ export default class BookDetail extends React.PureComponent {
       backButtonTitle: '返回', // override the back button title (optional)
       backButtonHidden: false, // hide the back button altogether (optional)
     });
+
+    // 保存阅读记录
+    saveReadHistory(this.props.book);
   };
 
   render() {

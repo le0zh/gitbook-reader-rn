@@ -29,7 +29,7 @@ Navigation.startTabBasedApp({
     },
     {
       label: 'Hisotry',
-      screen: 'app.Empty',
+      screen: 'app.History',
       icon: require('./src/img/history.png'),
       selectedIcon: require('./src/img/history.png'), // iOS only
       title: 'Hisotry',
