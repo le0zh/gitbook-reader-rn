@@ -123,6 +123,7 @@ export default class Feeds extends React.Component {
           refreshing={this.state.refreshing}
           onEndReached={this._loadMore}
           onRefresh={this._handleRefresh}
+          getItemLayout={this.props.getItemLayout}
           ItemSeparatorComponent={this._renderItemSeparator}
         />
       </View>

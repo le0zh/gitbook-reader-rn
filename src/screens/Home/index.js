@@ -6,6 +6,8 @@ import { px2dp, SCREEN_WIDTH, saveBookCover } from '../../utils';
 import Feeds from '../../components/Feeds';
 import Book from './Book';
 
+const ITEM_HEIGHT = px2dp(320);
+
 export default class Home extends React.Component {
   static navigatorStyle = {
     navBarHideOnScroll: true,
@@ -48,8 +50,20 @@ export default class Home extends React.Component {
 
   _renderItem = (_renderItem = ({ item }) => <Book onPress={() => this._gotoDetail(item)} key={item.id} {...item} />);
 
+  _getItemLayout = (data, index) => {
+    return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index };
+  };
+
   render() {
-    return <Feeds navigator={this.props.navigator} renderItem={this._renderItem} category="前端" tabLabel="前端" />;
+    return (
+      <Feeds
+        getItemLayout={this._getItemLayout}
+        navigator={this.props.navigator}
+        renderItem={this._renderItem}
+        category="前端"
+        tabLabel="前端"
+      />
+    );
   }
 }
 

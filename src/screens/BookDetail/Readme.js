@@ -66,7 +66,7 @@ export default class ReadMe extends React.PureComponent {
 
   render() {
     if (!this.state.ready) {
-      return <ActivityIndicator size="large" />;
+      return <ActivityIndicator size="small" />;
     }
 
     const htmlStr = `
