@@ -2,6 +2,7 @@ package com.gitbookreader;
 
 import com.facebook.react.ReactPackage;
 import com.reactnativenavigation.NavigationApplication;
+import com.rnfs.RNFSPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,8 @@ public class MainApplication extends NavigationApplication {
 
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
-                // new MainReactPackage(),
+                new MyPackage(),
+                new RNFSPackage()
         );
     }
 

@@ -1,12 +1,16 @@
 import React from 'react';
-import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback, NativeModules } from 'react-native';
+
 import moment from 'moment';
+import RNFS from 'react-native-fs';
 
 import { px2dp, SCREEN_WIDTH } from '../../utils';
 import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 import Badge from './Badge';
 import Readme from './Readme';
 import { saveReadHistory } from '../../data';
+
+const JUMPER = NativeModules.Jumper;
 
 export default class BookDetail extends React.PureComponent {
   static navigatorStyle = {
@@ -19,12 +23,17 @@ export default class BookDetail extends React.PureComponent {
     navBarTitleTextCentered: true,
     statusBarColor: '#3F51B5',
     navBarButtonColor: '#fff',
-    tabBarHidden: true,
+    tabBarHidden: false,
     topBarElevationShadowEnabled: true,
   };
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      downloading: false,
+      downloaded: false,
+    };
   }
 
   _readOnline = () => {
@@ -42,6 +51,78 @@ export default class BookDetail extends React.PureComponent {
 
     // 保存阅读记录
     saveReadHistory(this.props.book);
+  };
+
+  _readLocal = () => {
+    const { book } = this.props;
+
+    const DIR = `${RNFS.DocumentDirectoryPath}/download/${book.id.replace('/', '-')}`;
+    const path = `${DIR}/book.epub`;
+
+    // 调用FolioReader
+    JUMPER.startFolioReader(path);
+  };
+
+  _download = () => {
+    if (this.state.downloading) {
+      this.props.navigator.showSnackbar({
+        text: 'downloading',
+      });
+
+      return;
+    }
+
+    this.props.navigator.showSnackbar({
+      text: 'Start to download',
+    });
+
+    const { book } = this.props;
+
+    this.setState({
+      downloading: true,
+    });
+
+    const DIR = `${RNFS.DocumentDirectoryPath}/download/${book.id.replace('/', '-')}`;
+
+    const downlosdFileOpt = {
+      fromUrl: book.urls.download.epub,
+      toFile: `${DIR}/book.epub`,
+      background: true,
+      progressDivider: 10,
+      progress: res => {
+        console.log(res);
+      },
+    };
+
+    const doDownload = () => {
+      // 先保存meta.json
+      RNFS.writeFile(`${DIR}/meta.json`, JSON.stringify(book), 'utf8')
+        .then(success => {
+          console.log('meta FILE WRITTEN!');
+          // 再下载epub文件
+          const result = RNFS.downloadFile(downlosdFileOpt);
+          result.promise.then(res => {
+            console.log(res.statusCode, res.jobId, res.bytesWritten);
+            this.setState({
+              downloading: false,
+              downloaded: true,
+            });
+          });
+        })
+        .catch(err => {
+          console.log(err.message);
+        });
+    };
+
+    RNFS.exists(DIR).then(dirExists => {
+      if (dirExists) {
+        doDownload();
+      } else {
+        RNFS.mkdir(DIR).then(() => {
+          doDownload();
+        });
+      }
+    });
   };
 
   render() {
@@ -62,7 +143,19 @@ export default class BookDetail extends React.PureComponent {
             <TouchableNativeFeedback onPress={this._readOnline}>
               <View style={styles.button}><Text style={styles.buttonText}>Read Online</Text></View>
             </TouchableNativeFeedback>
-            <View style={styles.button}><Text style={styles.buttonText}>Download</Text></View>
+
+            {this.state.downloaded
+              ? <TouchableNativeFeedback onPress={this._readLocal}>
+                  <View style={styles.button}>
+                    <Text style={styles.buttonText}>Downloaded</Text>
+                  </View>
+                </TouchableNativeFeedback>
+              : <TouchableNativeFeedback onPress={this._download}>
+                  <View style={styles.button}>
+                    <Text style={styles.buttonText}>{this.state.downloading ? 'Downloading' : 'Download'}</Text>
+                  </View>
+                </TouchableNativeFeedback>}
+
           </View>
         </View>
 

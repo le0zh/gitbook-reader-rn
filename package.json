@@ -11,6 +11,7 @@
     "moment": "^2.18.1",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.2",
+    "react-native-fs": "^2.3.3",
     "react-native-navigation": "^1.1.80"
   },
   "devDependencies": {
