@@ -43,12 +43,15 @@ export default class NewsCard extends React.PureComponent {
 
 const styles = StyleSheet.create({
   row: {
-    height: px2dp(320),
+    height: px2dp(380),
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    padding: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#e9e9e9',
   },
 
   cover: {
@@ -65,6 +68,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
+    elevation:5,
   },
 
   content: {

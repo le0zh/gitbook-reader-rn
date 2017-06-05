@@ -124,7 +124,6 @@ export default class Feeds extends React.Component {
           onEndReached={this._loadMore}
           onRefresh={this._handleRefresh}
           getItemLayout={this.props.getItemLayout}
-          ItemSeparatorComponent={this._renderItemSeparator}
         />
       </View>
     );

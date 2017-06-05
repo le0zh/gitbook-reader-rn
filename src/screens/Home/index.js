@@ -6,7 +6,7 @@ import { px2dp, SCREEN_WIDTH, saveBookCover } from '../../utils';
 import Feeds from '../../components/Feeds';
 import Book from './Book';
 
-const ITEM_HEIGHT = px2dp(320);
+const ITEM_HEIGHT = px2dp(380);
 
 export default class Home extends React.Component {
   static navigatorStyle = {
@@ -86,13 +86,5 @@ const styles = StyleSheet.create({
     padding: 25,
     borderBottomColor: '#BDBDBD',
     borderBottomWidth: px2dp(1),
-  },
-
-  itemSeparator: {
-    height: px2dp(90),
-    width: SCREEN_WIDTH,
-    backgroundColor: '#222',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#e9e9e9',
   },
 });
