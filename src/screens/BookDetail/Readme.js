@@ -46,7 +46,7 @@ export default class ReadMe extends React.PureComponent {
     get(`https://api.gitbook.com/book/${this.props.id}/contents/README.json`).then(res => {
       this.setState({
         ready: true,
-        content: res.sections[0].content,
+        content: res.sections[0].content.replaceAll('<a', '<span ').replaceAll('/a>', '/span>'),
       });
     });
   }
