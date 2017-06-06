@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback, NativeModules } from 'react-native';
+import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
 
 import moment from 'moment';
 import RNFS from 'react-native-fs';
@@ -9,8 +9,7 @@ import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 import Badge from './Badge';
 import Readme from './Readme';
 import { saveReadHistory } from '../../data';
-
-const JUMPER = NativeModules.Jumper;
+import { downloadAsync } from '../../data/bookFiles';
 
 export default class BookDetail extends React.PureComponent {
   static navigatorStyle = {
@@ -60,7 +59,20 @@ export default class BookDetail extends React.PureComponent {
     const path = `${DIR}/book.epub`;
 
     // 调用FolioReader
-    JUMPER.startFolioReader(path);
+    // MyNativeModule.startFolioReader(path);
+
+    const contentDir = `${DIR}/content`;
+
+    this._makeSureDirExist(contentDir, () => {
+      // 解压缩
+      MyNativeModule.unZipFile(path, contentDir)
+        .then(res => {
+          console.log('unzip done', res);
+        })
+        .catch(e => {
+          console.warn(e);
+        });
+    });
   };
 
   _download = () => {
@@ -82,46 +94,12 @@ export default class BookDetail extends React.PureComponent {
       downloading: true,
     });
 
-    const DIR = `${RNFS.DocumentDirectoryPath}/download/${book.id.replace('/', '-')}`;
-
-    const downlosdFileOpt = {
-      fromUrl: book.urls.download.epub,
-      toFile: `${DIR}/book.epub`,
-      background: true,
-      progressDivider: 10,
-      progress: res => {
-        console.log(res);
-      },
-    };
-
-    const doDownload = () => {
-      // 先保存meta.json
-      RNFS.writeFile(`${DIR}/meta.json`, JSON.stringify(book), 'utf8')
-        .then(success => {
-          console.log('meta FILE WRITTEN!');
-          // 再下载epub文件
-          const result = RNFS.downloadFile(downlosdFileOpt);
-          result.promise.then(res => {
-            console.log(res.statusCode, res.jobId, res.bytesWritten);
-            this.setState({
-              downloading: false,
-              downloaded: true,
-            });
-          });
-        })
-        .catch(err => {
-          console.log(err.message);
-        });
-    };
-
-    RNFS.exists(DIR).then(dirExists => {
-      if (dirExists) {
-        doDownload();
-      } else {
-        RNFS.mkdir(DIR).then(() => {
-          doDownload();
-        });
-      }
+    downloadAsync(book).then(res => {
+      console.log(res.statusCode, res.jobId, res.bytesWritten);
+      this.setState({
+        downloading: false,
+        downloaded: true,
+      });
     });
   };
 

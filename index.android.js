@@ -36,7 +36,7 @@ Navigation.startTabBasedApp({
     },
     {
       label: 'Download',
-      screen: 'app.Empty',
+      screen: 'app.Reader',
       icon: require('./src/img/download.png'),
       selectedIcon: require('./src/img/download.png'), // iOS only
       title: 'Download',

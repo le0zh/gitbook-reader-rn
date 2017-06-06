@@ -5,6 +5,7 @@ import BookDetail from './BookDetail';
 import OnlineReader from './OnlineReader';
 import CoverHeader from './BookDetail/CoverHeader';
 import History from './History';
+import Reader from './Reader';
 import Empty from './Empty';
 
 // register all screens of the app (including internal ones)
@@ -14,5 +15,6 @@ export function registerScreens() {
   Navigation.registerComponent('app.BookDetail.Cover', () => CoverHeader);
   Navigation.registerComponent('app.OnlineReader', () => OnlineReader);
   Navigation.registerComponent('app.History', () => History);
+  Navigation.registerComponent('app.Reader', () => Reader);
   Navigation.registerComponent('app.Empty', () => Empty);
 }
