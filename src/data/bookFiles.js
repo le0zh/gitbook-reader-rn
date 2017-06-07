@@ -2,6 +2,8 @@ import { NativeModules } from 'react-native';
 import fastXmlParser from 'fast-xml-parser';
 import RNFS from 'react-native-fs';
 
+import { saveDownloadItem } from './dataBase';
+
 const MyNativeModule = NativeModules.MyNativeModule;
 
 /**
@@ -36,24 +38,35 @@ function executeDownloadFlow(DIR, book) {
     },
   };
 
-  // 1.下载
-  const res = RNFS.downloadFile(downlosdFileOpt);
+  // 下载
+  const downloadRes = RNFS.downloadFile(downlosdFileOpt);
 
-  return res.promise
+  return downloadRes.promise
     .then(res => {
-      book.size = res.bytesWritten;
-      book.downloadDate = Date.now();
+      // 解压并生成目录文件
+      unzip(book.id);
 
-      // 2.保存meta.json
-      return RNFS.writeFile(`${DIR}/meta.json`, JSON.stringify(book), 'utf8').then(success => {
-        console.log(`${book.id} meta FILE WRITTEN!`);
+      // 保存下载记录
+      saveDownloadItem(book.id, book.title, book.cover.small, res.bytesWritten);
 
-        // 解压并生成目录文件
-        unzip(book.id);
+      return downloadRes;
 
-        // 将下载的结果返回出去
-        return res;
-      });
+      // book.size = res.bytesWritten;
+      // book.downloadDate = Date.now();
+
+      // // 2.保存meta.json
+      // return RNFS.writeFile(`${DIR}/meta.json`, JSON.stringify(book), 'utf8').then(success => {
+      //   console.log(`${book.id} meta FILE WRITTEN!`);
+
+      //   // 解压并生成目录文件
+      //   unzip(book.id);
+
+      //   // 保存下载记录
+      //   saveDownloadItem(book.id, book.title, book.cover.small, res.bytesWritten);
+
+      //   // 将下载的结果返回出去
+      //   return res;
+      // });
     })
     .catch(err => {
       console.warn(err.message);

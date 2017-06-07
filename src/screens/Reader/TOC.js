@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, WebView, ScrollView, TouchableNativeFeedback } from 'react-native';
+import { View, Text, StyleSheet, WebView, ScrollView, TouchableNativeFeedback, BackAndroid } from 'react-native';
 
 import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';

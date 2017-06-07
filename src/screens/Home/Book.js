@@ -56,8 +56,10 @@ const styles = StyleSheet.create({
 
   cover: {
     width: px2dp(200),
-    height: px2dp(300),
+    height: px2dp(380),
     marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   coverImage: {
@@ -65,10 +67,7 @@ const styles = StyleSheet.create({
     height: px2dp(262),
     borderWidth: 2,
     borderColor: '#eee',
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    elevation:5,
+    elevation: 5,
   },
 
   content: {

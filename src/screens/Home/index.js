@@ -5,6 +5,7 @@ import { px2dp, SCREEN_WIDTH, saveBookCover } from '../../utils';
 
 import Feeds from '../../components/Feeds';
 import Book from './Book';
+import { getAllBooks } from '../../data';
 
 const ITEM_HEIGHT = px2dp(380);
 
@@ -48,7 +49,9 @@ export default class Home extends React.Component {
     });
   };
 
-  _renderItem = (_renderItem = ({ item }) => <Book onPress={() => this._gotoDetail(item)} key={item.id} {...item} />);
+  _renderItem = ({ item }) => {
+    return <Book onPress={() => this._gotoDetail(item)} key={item.id} {...item} />;
+  };
 
   _getItemLayout = (data, index) => {
     return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index };
@@ -57,11 +60,11 @@ export default class Home extends React.Component {
   render() {
     return (
       <Feeds
+        key="home"
         getItemLayout={this._getItemLayout}
         navigator={this.props.navigator}
         renderItem={this._renderItem}
-        category="前端"
-        tabLabel="前端"
+        fetchData={getAllBooks}
       />
     );
   }

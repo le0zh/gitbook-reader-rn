@@ -10,7 +10,6 @@ import {
   InteractionManager,
 } from 'react-native';
 
-import { getAllBooks } from '../data';
 import { px2dp, SCREEN_WIDTH } from '../utils/';
 
 export default class Feeds extends React.Component {
@@ -47,7 +46,9 @@ export default class Feeds extends React.Component {
 
       const { page } = this.state;
 
-      getAllBooks(page).then(res => {
+      // fetchData(page: number): {list: []}
+      // page start from 0
+      this.props.fetchData(page).then(res => {
         this.setState({
           data: page === 0 ? res.list : [...this.state.data, ...res.list],
           loading: false,
@@ -105,8 +106,8 @@ export default class Feeds extends React.Component {
   render() {
     if (!this.state.loading && this.state.data.length === 0) {
       return (
-        <View style={styles.wrapper}>
-          <Text>暂无内容 ...</Text>
+        <View style={styles.noContent}>
+          <Text style={{ fontStyle: 'italic' }}>NO DATA</Text>
         </View>
       );
     }
@@ -133,6 +134,13 @@ export default class Feeds extends React.Component {
 const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
+  },
+
+  noContent: {
+    width: SCREEN_WIDTH,
+    height: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 
   header: {

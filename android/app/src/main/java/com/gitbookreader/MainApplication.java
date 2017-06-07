@@ -7,6 +7,8 @@ import com.rnfs.RNFSPackage;
 import java.util.Arrays;
 import java.util.List;
 
+import io.realm.react.RealmReactPackage;
+
 public class MainApplication extends NavigationApplication {
 
     @Override
@@ -17,7 +19,8 @@ public class MainApplication extends NavigationApplication {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
                 new MyPackage(),
-                new RNFSPackage()
+                new RNFSPackage(),
+                new RealmReactPackage()
         );
     }
 

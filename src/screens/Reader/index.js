@@ -9,7 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Modal,
-  BackAndroid,
+  BackHandler,
 } from 'react-native';
 
 import RNFS from 'react-native-fs';
@@ -56,11 +56,11 @@ export default class Empty extends React.PureComponent {
       this._loadContent('index.html');
     });
 
-    BackAndroid.addEventListener('hardwareBackPess', this._handleBackPress);
+    BackHandler.addEventListener('hardwareBackPess', this._handleBackPress);
   }
 
   componentWillUnMount() {
-    BackAndroid.removeEventListener('hardwareBackPess', this._handleBackPress);
+    BackHandler.removeEventListener('hardwareBackPess', this._handleBackPress);
   }
 
   _closeToc = () => {

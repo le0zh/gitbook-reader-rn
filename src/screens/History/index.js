@@ -44,7 +44,7 @@ export default class Empty extends React.PureComponent {
   render() {
     return (
       <View>
-        {this.state.data.map(item => <Text>{item.title}</Text>)}
+        <Text>history</Text>
       </View>
     );
   }
