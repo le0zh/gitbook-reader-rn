@@ -1,5 +1,16 @@
 import React from 'react';
-import { View, Text, StyleSheet, ToastAndroid, WebView, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  ToastAndroid,
+  WebView,
+  ScrollView,
+  TouchableOpacity,
+  Modal,
+  BackAndroid,
+} from 'react-native';
 
 import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
@@ -10,6 +21,8 @@ import { px2dp, SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utils';
 import TOC from './TOC';
 
 const TESTDIR = '/data/user/0/com.gitbookreader/files/download/siddontang-leetcode-solution';
+
+const AnimatedToc = Animated.createAnimatedComponent(TOC);
 
 export default class Empty extends React.PureComponent {
   static navigatorStyle = {
@@ -22,11 +35,12 @@ export default class Empty extends React.PureComponent {
     super(props);
 
     this.state = {
-      toc: [],
       content: '',
-      showToolBars: false,
+      toc: [],
     };
 
+    this.tocLeft = new Animated.Value(-SCREEN_WIDTH);
+    this.showToc = false;
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
@@ -38,41 +52,60 @@ export default class Empty extends React.PureComponent {
       this.setState({
         toc,
       });
+
+      this._loadContent('index.html');
     });
 
-    RNFS.readFile(`${TESTDIR}/content/remove_element.html`).then(content => {
+    BackAndroid.addEventListener('hardwareBackPess', this._handleBackPress);
+  }
+
+  componentWillUnMount() {
+    BackAndroid.removeEventListener('hardwareBackPess', this._handleBackPress);
+  }
+
+  _closeToc = () => {
+    Animated.timing(this.tocLeft, {
+      toValue: -SCREEN_WIDTH,
+      useNativeDriver: true,
+    }).start();
+
+    this.showToc = false;
+  };
+
+  _handleBackPress = () => {
+    if (this.showToc) {
+      this._closeToc();
+      return true;
+    }
+  };
+
+  _loadContent = src => {
+    RNFS.readFile(`${TESTDIR}/content/${src}`).then(content => {
       this.setState({
         content,
       });
     });
-  }
-
-  _loadData = () => {};
+  };
 
   onNavigatorEvent(event) {
-    console.log(event.id);
     if (event.id == 'bottomTabSelected') {
       // this is the same id field from the static navigatorButtons definition
-      this._loadData();
+      // this._loadData();
     }
   }
 
   _onTouch = () => {
-    // ToastAndroid.show('show operation', ToastAndroid.SHORT);
-    this.setState(prevState => {
-      return { showToolBars: !prevState.showToolBars };
-    });
+    Animated.timing(this.tocLeft, {
+      toValue: 0,
+      useNativeDriver: true,
+    }).start();
+
+    this.showToc = true;
   };
 
-  _renderTopBar = () => {
-    // return <View style={styles.topBar} />;
-    return <TOC style={styles.full} toc={this.state.toc} />;
-  };
-
-  _onRequestClose = () => {
-    this.setState({
-      showToolBars: false,
-    });
+  _onNavPress = src => {
+    this._closeToc();
+    this._loadContent(src);
   };
 
   render() {
@@ -88,18 +121,18 @@ export default class Empty extends React.PureComponent {
             baseUrl: 'file:///data/user/0/com.gitbookreader/files/download/siddontang-leetcode-solution/content/',
           }}
           startInLoadingState
-          style={{ flex: 1 }}
+          style={styles.webView}
         />
         <TouchableOpacity style={styles.touchArea} onPress={this._onTouch}>
           <View />
         </TouchableOpacity>
 
-        <Modal visible={this.state.showToolBars} onRequestClose={this._onRequestClose}>
-          <View style={{ flex: 1 }}>
-            <Text>标题</Text>
-            <TOC toc={this.state.toc} />
-          </View>
-        </Modal>
+        <AnimatedToc
+          style={[styles.toc, { transform: [{ translateX: this.tocLeft }] }]}
+          onNavPress={this._onNavPress}
+          toc={this.state.toc}
+        />
+
       </View>
     );
   }
@@ -123,6 +156,28 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: 0,
+  },
+
+  toc: {
+    height: SCREEN_HEIGHT,
+    width: SCREEN_WIDTH,
+    position: 'absolute',
+    // left: -SCREEN_WIDTH,
+    left: 0,
+    bottom: 0,
+    top: 0,
+    // transform: [{ translateX: -SCREEN_WIDTH }],
+  },
+
+  webView: {
+    // height: SCREEN_HEIGHT,
+    // width: SCREEN_WIDTH,
+    flex: 1,
+    // position: 'absolute',
+    // left: 0,
+    // top: 0,
+    // right: 0,
+    // bottom: 0,
   },
 
   full: {

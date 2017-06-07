@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, WebView, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, WebView, ScrollView, TouchableNativeFeedback } from 'react-native';
 
 import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
@@ -16,8 +16,25 @@ export default class TOC extends React.PureComponent {
     statusBarColor: '#3F51B5',
   };
 
+  constructor(props) {
+    super(props);
+
+    console.log('TOC constructor!!!');
+
+    this.state = {
+      selectedUrl: 'index.html',
+    };
+  }
+
+  _onNavItemPress = src => {
+    this.setState({
+      selectedUrl: src,
+    });
+
+    this.props.onNavPress && this.props.onNavPress(src);
+  };
+
   _renderLevels = (item, level) => {
-    console.log(item.navPoint);
     let subItems = null;
 
     if (item.navPoint) {
@@ -30,36 +47,45 @@ export default class TOC extends React.PureComponent {
       }
     }
 
+    const isSelected = this.state.selectedUrl === item.content._src;
+    let textColor = '#000';
+
+    if (isSelected) {
+      textColor = '#3F51B5';
+    } else if (level > 0) {
+      textColor = '#000000B3';
+    }
+
     return (
-      <View key={item._id}>
-        <View style={styles.tocItem}>
-          <Text style={[styles.title1, { color: level > 0 ? '#000000B3' : '#000', marginLeft: 30 * level }]}>
-            {item.navLabel.text}
-          </Text>
+      <TouchableNativeFeedback key={item._id} onPress={() => this._onNavItemPress(item.content._src)}>
+        <View>
+          <View style={styles.tocItem}>
+            <Text style={[styles.title1, { color: textColor, marginLeft: 30 * level }]}>
+              {item.navLabel.text}
+            </Text>
+          </View>
+          {subItems}
         </View>
-        {subItems}
-      </View>
+      </TouchableNativeFeedback>
     );
   };
 
   render() {
-    if (this.props.toc.length === 0) {
-      return null;
-    }
-
     return (
-      <ScrollView>
-        {this.props.toc.map(item => {
-          return this._renderLevels(item, 0);
-        })}
-      </ScrollView>
+      <View style={this.props.style}>
+        <ScrollView>
+          {this.props.toc.map(item => {
+            return this._renderLevels(item, 0);
+          })}
+        </ScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
   tocItem: {
-    height: px2dp(160),
+    height: px2dp(140),
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
