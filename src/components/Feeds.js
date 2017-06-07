@@ -58,8 +58,6 @@ export default class Feeds extends React.Component {
     });
   };
 
-  _keyExtractor = (item, index) => item.id;
-
   _renderFooter = () => {
     if (!this.state.loading) return null;
 
@@ -117,7 +115,7 @@ export default class Feeds extends React.Component {
         <FlatList
           ref={view => (this.flatList = view)}
           data={this.state.data}
-          keyExtractor={this._keyExtractor}
+          keyExtractor={this.props.keyExtractor}
           renderItem={this.props.renderItem}
           ListFooterComponent={this._renderFooter}
           onEndReachedThreshold={30}

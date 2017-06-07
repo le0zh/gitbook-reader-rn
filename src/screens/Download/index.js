@@ -40,18 +40,18 @@ export default class Download extends React.PureComponent {
   };
 
   _renderItem = ({ item }) => {
-    console.log(item.bookId);
+    console.log(item.downloadAt);
     return <Book onPress={() => this._readLocal(item)} {...item} key={item.bookId} />;
   };
 
   render() {
     return (
       <Feeds
-        key="download"
         getItemLayout={this._getItemLayout}
         navigator={this.props.navigator}
         renderItem={this._renderItem}
         fetchData={getDownloadItemsAsync}
+        keyExtractor={item => item.bookId}
       />
     );
   }
