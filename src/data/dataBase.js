@@ -25,7 +25,7 @@ const DownloadSchema = {
     title: 'string', // 书的标题
     cover: 'string', // 书的封面
     size: 'int', // 文件大小 kb
-    downladAt: 'date', // 下载时间
+    downloadAt: 'date', // 下载时间
   },
 };
 
@@ -48,7 +48,7 @@ const realm = new Realm({ schema: [HistorySchema, DownloadSchema, ProgressSchema
  */
 export function saveDownloadItem(bookId: string, title: string, cover: string, size: number) {
   realm.write(() => {
-    realm.create('Download', { bookId, title, cover, size, downladAt: new Date() });
+    realm.create('Download', { bookId, title, cover, size, downloadAt: new Date() });
   });
 }
 
@@ -59,7 +59,7 @@ export function saveDownloadItem(bookId: string, title: string, cover: string, s
 export function getDownloadItems(page = 0) {
   const pageSize = 10;
   page = page + 1;
-  let items = realm.objects('Download').sorted('downladAt').slice((page - 1) * pageSize, pageSize);
+  let items = realm.objects('Download').sorted('downloadAt', true).slice((page - 1) * pageSize, pageSize);
 
   return items;
 }
