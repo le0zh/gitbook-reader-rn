@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { getDownloadItemsAsync } from '../../data/dataBase';
+import { getDownloadItemsAsync, deleteOneDownloadItem } from '../../data/dataBase';
 import Feeds from '../../components/Feeds';
 import Book from './Book';
 import { px2dp } from '../../utils';
@@ -27,7 +27,7 @@ export default class Download extends React.PureComponent {
 
   onNavigatorEvent(event) {
     if (event.id == 'bottomTabSelected') {
-      // todo: reload data
+      this.feeds.refresh();
     }
   }
 
@@ -37,16 +37,31 @@ export default class Download extends React.PureComponent {
 
   _readLocal = item => {
     console.log('start to read local');
+    // todo: launch local reader
+  };
+
+  _deleteOneItem = bookId => {
+    // todo: remove this after test
+    // deleteOneDownloadItem(bookId);
+    this.feeds.removeOne(item => item.bookId === bookId);
   };
 
   _renderItem = ({ item }) => {
     console.log(item.downloadAt);
-    return <Book onPress={() => this._readLocal(item)} {...item} key={item.bookId} />;
+    return (
+      <Book
+        onPress={() => this._readLocal(item)}
+        remove={() => this._deleteOneItem(item.bookId)}
+        {...item}
+        key={item.bookId}
+      />
+    );
   };
 
   render() {
     return (
       <Feeds
+        ref={view => (this.feeds = view)}
         getItemLayout={this._getItemLayout}
         navigator={this.props.navigator}
         renderItem={this._renderItem}

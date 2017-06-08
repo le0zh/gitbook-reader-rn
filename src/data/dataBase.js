@@ -76,3 +76,13 @@ export function getDownloadItemsAsync(page = 0) {
     }
   });
 }
+
+export function deleteOneDownloadItem(bookId) {
+  let books = realm.objects('Download').filtered(`bookId = "${bookId}"`);
+
+  if (books.length > 0) {
+    realm.write(() => {
+      realm.delete(books[0]);
+    });
+  }
+}

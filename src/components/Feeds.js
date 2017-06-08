@@ -24,20 +24,25 @@ export default class Feeds extends React.Component {
       error: null,
       refreshing: false,
     };
-
-    this.props.navigator.setOnNavigatorEvent(this._onNavigatorEvent);
   }
 
   componentDidMount() {
     this._fetchData();
   }
 
-  _onNavigatorEvent = event => {
-    console.log(event.id);
-    if (event.id === 'bottomTabReselected') {
-      this.flatList && this.flatList.scrollToIndex({ viewPosition: 0.5, index: 0 });
-      this._handleRefresh();
-    }
+  removeOne = predicate => {
+    const newData = this.state.data.filter((item, index) => {
+      return !predicate(item);
+    });
+
+    this.setState({
+      data: newData,
+    });
+  };
+
+  refresh = () => {
+    // this.flatList && this.flatList.scrollToIndex({ viewPosition: 0.5, index: 0 });
+    this._handleRefresh();
   };
 
   _fetchData = () => {
@@ -77,7 +82,7 @@ export default class Feeds extends React.Component {
   _handleRefresh = () => {
     this.setState(
       {
-        page: 1,
+        page: 0,
         refreshing: true,
       },
       () => {

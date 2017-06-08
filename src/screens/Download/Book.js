@@ -1,33 +1,38 @@
 import React from 'react';
 import { Image, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+
 import moment from 'moment';
+import Interactable from 'react-native-interactable';
 
 import { px2dp, SCREEN_WIDTH } from '../../utils';
 import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
+import RowWithActions from '../../components/RowWithActions';
 
 export default class NewsCard extends React.PureComponent {
   render() {
     return (
-      <TouchableNativeFeedback onPress={this.props.onPress}>
-        <View style={styles.row}>
-          <View style={styles.cover}>
-            <ImageWithPlaceHolder
-              style={styles.coverImage}
-              placeHolderSource={require('../../img/default-cover.png')}
-              source={{ uri: `http://www.gitbook.com${this.props.cover}` }}
-            />
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.title}>{this.props.title}</Text>
+      <RowWithActions height={px2dp(380)} onTrash={this.props.remove}>
+        <TouchableNativeFeedback onPress={this.props.onPress}>
+          <View style={styles.row}>
+            <View style={styles.cover}>
+              <ImageWithPlaceHolder
+                style={styles.coverImage}
+                placeHolderSource={require('../../img/default-cover.png')}
+                source={{ uri: `http://www.gitbook.com${this.props.cover}` }}
+              />
+            </View>
+            <View style={styles.content}>
+              <Text style={styles.title}>{this.props.title}</Text>
 
-            <Text numberOfLines={2} ellipsizeMode="tail" style={styles.desc}>
-              size: {this.props.size}kb
-            </Text>
+              <Text numberOfLines={2} ellipsizeMode="tail" style={styles.desc}>
+                size: {this.props.size}kb
+              </Text>
 
-            <Text>Downloaded at {moment(this.props.downloadAt).fromNow()}</Text>
+              <Text>Downloaded at {moment(this.props.downloadAt).fromNow()}</Text>
+            </View>
           </View>
-        </View>
-      </TouchableNativeFeedback>
+        </TouchableNativeFeedback>
+      </RowWithActions>
     );
   }
 }

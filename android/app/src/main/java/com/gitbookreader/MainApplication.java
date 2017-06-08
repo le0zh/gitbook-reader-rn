@@ -6,6 +6,7 @@ import com.rnfs.RNFSPackage;
 
 import java.util.Arrays;
 import java.util.List;
+import com.wix.interactable.Interactable;
 
 import io.realm.react.RealmReactPackage;
 
@@ -20,7 +21,8 @@ public class MainApplication extends NavigationApplication {
         return Arrays.<ReactPackage>asList(
                 new MyPackage(),
                 new RNFSPackage(),
-                new RealmReactPackage()
+                new RealmReactPackage(),
+                new Interactable()
         );
     }
 
