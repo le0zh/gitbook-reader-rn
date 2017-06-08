@@ -9,6 +9,21 @@ import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 import RowWithActions from '../../components/RowWithActions';
 
 export default class NewsCard extends React.PureComponent {
+  _showSize = size => {
+    if (size > 1000) {
+      const inKb = size / 1000;
+
+      if (inKb > 1000) {
+        const inMb = inKb / 1000;
+        return `${inMb.toFixed(2)} MB`;
+      }
+
+      return `${inKb.toFixed(2)} kB`;
+    }
+
+    return `${size} bytes`;
+  };
+
   render() {
     return (
       <RowWithActions height={px2dp(380)} onTrash={this.props.remove}>
@@ -25,7 +40,7 @@ export default class NewsCard extends React.PureComponent {
               <Text style={styles.title}>{this.props.title}</Text>
 
               <Text numberOfLines={2} ellipsizeMode="tail" style={styles.desc}>
-                size: {this.props.size}kb
+                size: {this._showSize(this.props.size)}
               </Text>
 
               <Text>Downloaded at {moment(this.props.downloadAt).fromNow()}</Text>
