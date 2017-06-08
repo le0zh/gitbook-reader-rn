@@ -14,21 +14,38 @@ import {
 
 import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
+import Interactable from 'react-native-interactable';
 
 import { getReadHisotry } from '../../data';
 import { px2dp, SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utils';
-
+import { getDirFromBookId } from '../../data/bookFiles';
 import TOC from './TOC';
 
-const TESTDIR = '/data/user/0/com.gitbookreader/files/download/siddontang-leetcode-solution';
-
 const AnimatedToc = Animated.createAnimatedComponent(TOC);
+
+const SideMenuWidth = SCREEN_WIDTH * 4 / 5;
+const RemainingWidth = SCREEN_WIDTH - SideMenuWidth;
 
 export default class Empty extends React.PureComponent {
   static navigatorStyle = {
     tabBarHidden: true,
-    navBarHidden: true,
+    navBarHideOnScroll: false,
+    navBarBackgroundColor: '#3F51B5',
+    navBarTextColor: '#fff',
     statusBarColor: '#3F51B5',
+    navBarTitleTextCentered: true,
+  };
+
+  static navigatorButtons = {
+    rightButtons: [],
+    leftButtons: [
+      {
+        title: 'TOC', // if you want a textual button
+        icon: require('../../img/toc.png'), // if you want an image button
+        id: 'toc', // id of the button which will pass to your press event handler. See the section bellow for Android specific button ids
+        buttonColor: '#fff', // Set color for the button (can also be used in setButtons function to set different button style programatically)
+      },
+    ],
   };
 
   constructor(props) {
@@ -39,13 +56,12 @@ export default class Empty extends React.PureComponent {
       toc: [],
     };
 
-    this.tocLeft = new Animated.Value(-SCREEN_WIDTH);
-    this.showToc = false;
+    this.bookDir = getDirFromBookId(this.props.bookId);
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
   componentDidMount() {
-    RNFS.readFile(`${TESTDIR}/toc.json`).then(content => {
+    RNFS.readFile(`${this.bookDir}/toc.json`).then(content => {
       const toc = JSON.parse(content);
       console.log(toc);
 
@@ -55,56 +71,30 @@ export default class Empty extends React.PureComponent {
 
       this._loadContent('index.html');
     });
-
-    BackHandler.addEventListener('hardwareBackPess', this._handleBackPress);
   }
 
-  componentWillUnMount() {
-    BackHandler.removeEventListener('hardwareBackPess', this._handleBackPress);
-  }
-
-  _closeToc = () => {
-    Animated.timing(this.tocLeft, {
-      toValue: -SCREEN_WIDTH,
-      useNativeDriver: true,
-    }).start();
-
-    this.showToc = false;
-  };
-
-  _handleBackPress = () => {
-    if (this.showToc) {
-      this._closeToc();
-      return true;
+  onNavigatorEvent(event) {
+    if (event.type == 'NavBarButtonPress') {
+      if (event.id == 'toc') {
+        this.interactableView.setVelocity({ x: 2000 });
+      }
     }
-  };
+  }
 
   _loadContent = src => {
-    RNFS.readFile(`${TESTDIR}/content/${src}`).then(content => {
+    RNFS.readFile(`${this.bookDir}/content/${src}`).then(content => {
       this.setState({
         content,
       });
     });
   };
 
-  onNavigatorEvent(event) {
-    if (event.id == 'bottomTabSelected') {
-      // this is the same id field from the static navigatorButtons definition
-      // this._loadData();
-    }
-  }
-
   _onTouch = () => {
-    Animated.timing(this.tocLeft, {
-      toValue: 0,
-      useNativeDriver: true,
-    }).start();
-
-    this.showToc = true;
+    this.interactableView.setVelocity({ x: 2000 });
   };
 
   _onNavPress = src => {
-    this._closeToc();
+    this.interactableView.setVelocity({ x: -2000 });
     this._loadContent(src);
   };
 
@@ -118,20 +108,23 @@ export default class Empty extends React.PureComponent {
         <WebView
           source={{
             html: this.state.content,
-            baseUrl: 'file:///data/user/0/com.gitbookreader/files/download/siddontang-leetcode-solution/content/',
+            baseUrl: `file:///${this.bookDir}/content/`,
           }}
           startInLoadingState
           style={styles.webView}
         />
-        <TouchableOpacity style={styles.touchArea} onPress={this._onTouch}>
-          <View />
-        </TouchableOpacity>
 
-        <AnimatedToc
-          style={[styles.toc, { transform: [{ translateX: this.tocLeft }] }]}
-          onNavPress={this._onNavPress}
-          toc={this.state.toc}
-        />
+        <View style={styles.sideMenuContainer} pointerEvents="box-none">
+          <Interactable.View
+            ref={view => (this.interactableView = view)}
+            horizontalOnly={true}
+            snapPoints={[{ x: 0 }, { x: -SideMenuWidth }]}
+            boundaries={{ right: RemainingWidth / 2 }}
+            initialPosition={{ x: -SideMenuWidth }}
+          >
+            <TOC style={styles.sideMenu} onNavPress={this._onNavPress} toc={this.state.toc} />
+          </Interactable.View>
+        </View>
 
       </View>
     );
@@ -158,35 +151,27 @@ const styles = StyleSheet.create({
     top: 0,
   },
 
-  toc: {
-    height: SCREEN_HEIGHT,
-    width: SCREEN_WIDTH,
+  sideMenuContainer: {
     position: 'absolute',
-    // left: -SCREEN_WIDTH,
-    left: 0,
-    bottom: 0,
     top: 0,
-    // transform: [{ translateX: -SCREEN_WIDTH }],
+    left: -RemainingWidth,
+    right: 0,
+    bottom: 0,
+    flexDirection: 'row',
+    zIndex: 1002,
+  },
+
+  sideMenu: {
+    left: 0,
+    width: SCREEN_WIDTH,
+    paddingLeft: RemainingWidth,
+    flex: 1,
+    backgroundColor: '#C5CAE9',
+    paddingTop: 0,
+    elevation: 5,
   },
 
   webView: {
-    // height: SCREEN_HEIGHT,
-    // width: SCREEN_WIDTH,
     flex: 1,
-    // position: 'absolute',
-    // left: 0,
-    // top: 0,
-    // right: 0,
-    // bottom: 0,
-  },
-
-  full: {
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    right: 0,
-    bottom: 0,
-    height: SCREEN_HEIGHT,
-    width: SCREEN_WIDTH,
   },
 });

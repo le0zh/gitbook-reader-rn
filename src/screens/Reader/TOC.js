@@ -72,7 +72,7 @@ export default class TOC extends React.PureComponent {
 
   render() {
     return (
-      <View style={this.props.style}>
+      <View style={this.props.style} pointerEvents="box-none">
         <ScrollView>
           {this.props.toc.map(item => {
             return this._renderLevels(item, 0);
@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: '#e9e9e9',
+    backgroundColor: '#C5CAE9',
   },
 
   title1: {

@@ -15,6 +15,7 @@ export default class Download extends React.PureComponent {
     navBarTextColor: '#fff',
     statusBarColor: '#3F51B5',
     navBarTitleTextCentered: true,
+    navBarTitleTextCentered: true,
   };
 
   constructor(props) {
@@ -36,8 +37,14 @@ export default class Download extends React.PureComponent {
   };
 
   _readLocal = item => {
-    console.log('start to read local');
-    // todo: launch local reader
+    this.props.navigator.push({
+      screen: 'app.Reader', // unique ID registered with Navigation.registerScreen
+      title: item.title,
+      passProps: {
+        bookId: item.bookId,
+      }, // Object that will be passed as props to the pushed screen (optional)
+      animated: true, // does the push have transition animation or does it happen immediately (optional)
+    });
   };
 
   _deleteOneItem = bookId => {

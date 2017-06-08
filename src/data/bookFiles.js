@@ -76,7 +76,7 @@ function executeDownloadFlow(DIR, book) {
 /**
  * 根据bookId获得文件目录
  */
-function getDirFromBookId(bookId) {
+export function getDirFromBookId(bookId) {
   return `${RNFS.DocumentDirectoryPath}/download/${bookId.replace('/', '-')}`;
 }
 
