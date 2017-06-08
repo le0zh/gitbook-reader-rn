@@ -8,7 +8,7 @@ import { px2dp, SCREEN_WIDTH } from '../../utils';
 import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 import Badge from './Badge';
 import Readme from './Readme';
-import { saveReadHistory } from '../../data';
+import { checkIsDownloadOrNot } from '../../data/dataBase';
 import { downloadAsync } from '../../data/bookFiles';
 
 export default class BookDetail extends React.PureComponent {
@@ -49,30 +49,23 @@ export default class BookDetail extends React.PureComponent {
     });
 
     // 保存阅读记录
-    saveReadHistory(this.props.book);
+    // saveReadHistory(this.props.book);
   };
 
   _readLocal = () => {
     const { book } = this.props;
 
-    const DIR = `${RNFS.DocumentDirectoryPath}/download/${book.id.replace('/', '-')}`;
-    const path = `${DIR}/book.epub`;
+    this.props.navigator.push({
+      screen: 'app.Reader', // unique ID registered with Navigation.registerScreen
+      title: book.title,
+      passProps: {
+        bookId: book.id,
+      }, // Object that will be passed as props to the pushed screen (optional)
+      animated: true, // does the push have transition animation or does it happen immediately (optional)
+    });
 
     // 调用FolioReader
     // MyNativeModule.startFolioReader(path);
-
-    const contentDir = `${DIR}/content`;
-
-    this._makeSureDirExist(contentDir, () => {
-      // 解压缩
-      MyNativeModule.unZipFile(path, contentDir)
-        .then(res => {
-          console.log('unzip done', res);
-        })
-        .catch(e => {
-          console.warn(e);
-        });
-    });
   };
 
   _download = () => {
@@ -103,8 +96,40 @@ export default class BookDetail extends React.PureComponent {
     });
   };
 
+  _renderDownloadButton = isDownloaded => {
+    if (isDownloaded) {
+      return (
+        <TouchableNativeFeedback onPress={this._readLocal}>
+          <View style={[styles.button, { backgroundColor: '#C5CAE9' }]}>
+            <Text style={styles.buttonText}>Read Local</Text>
+          </View>
+        </TouchableNativeFeedback>
+      );
+    }
+
+    if (this.state.downloaded) {
+      return (
+        <TouchableNativeFeedback onPress={this._readLocal}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>Downloaded</Text>
+          </View>
+        </TouchableNativeFeedback>
+      );
+    }
+
+    return (
+      <TouchableNativeFeedback onPress={this._download}>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>{this.state.downloading ? 'Downloading' : 'Download'}</Text>
+        </View>
+      </TouchableNativeFeedback>
+    );
+  };
+
   render() {
     const { book } = this.props;
+
+    const isDownloaded = checkIsDownloadOrNot(book.id);
 
     return (
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.contentContainer}>
@@ -122,18 +147,7 @@ export default class BookDetail extends React.PureComponent {
               <View style={styles.button}><Text style={styles.buttonText}>Read Online</Text></View>
             </TouchableNativeFeedback>
 
-            {this.state.downloaded
-              ? <TouchableNativeFeedback onPress={this._readLocal}>
-                  <View style={styles.button}>
-                    <Text style={styles.buttonText}>Downloaded</Text>
-                  </View>
-                </TouchableNativeFeedback>
-              : <TouchableNativeFeedback onPress={this._download}>
-                  <View style={styles.button}>
-                    <Text style={styles.buttonText}>{this.state.downloading ? 'Downloading' : 'Download'}</Text>
-                  </View>
-                </TouchableNativeFeedback>}
-
+            {this._renderDownloadButton(isDownloaded)}
           </View>
         </View>
 

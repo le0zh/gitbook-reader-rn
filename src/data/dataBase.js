@@ -64,6 +64,23 @@ export function getDownloadItems(page = 0) {
   return items;
 }
 
+/**
+ * 检查指定bookId是否已经被下载
+ * @param {string} bookId 
+ */
+export function checkIsDownloadOrNot(bookId) {
+  let books = realm.objects('Download').filtered(`bookId = "${bookId}"`);
+
+  return books.length > 0;
+}
+
+/**
+ * 获取所有的下载书籍的id
+ */
+export function getAllDownloadIds() {
+  return realm.objects('Download').map(item => item.bookId);
+}
+
 export function getDownloadItemsAsync(page = 0) {
   return new Promise((resolve, reject) => {
     try {

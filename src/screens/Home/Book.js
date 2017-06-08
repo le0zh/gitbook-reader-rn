@@ -76,8 +76,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    // paddingTop: 10,
-    // paddingBottom: 10,
   },
 
   title: {
