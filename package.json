@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "fast-xml-parser": "^2.4.3",
+    "flow-bin": "^0.42.0",
     "moment": "^2.18.1",
     "react": "16.0.0-alpha.6",
     "react-native": "0.44.2",

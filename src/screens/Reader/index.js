@@ -16,7 +16,7 @@ import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
 import Interactable from 'react-native-interactable';
 
-import { getReadHisotry } from '../../data';
+import { getReadPreogress } from '../../data/dataBase';
 import { px2dp, SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utils';
 import { getDirFromBookId } from '../../data/bookFiles';
 import TOC from './TOC';
@@ -59,18 +59,16 @@ export default class Empty extends React.PureComponent {
 
     this.bookDir = getDirFromBookId(this.props.bookId);
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    this.initalPage = getReadPreogress(this.props.bookId);
   }
 
   componentDidMount() {
     RNFS.readFile(`${this.bookDir}/toc.json`).then(content => {
       const toc = JSON.parse(content);
-      console.log(toc);
 
-      this.setState({
-        toc,
-      });
+      this.setState({ toc });
 
-      this._loadContent('index.html');
+      this._loadContent(this.initalPage);
     });
   }
 
@@ -127,7 +125,13 @@ export default class Empty extends React.PureComponent {
             boundaries={{ right: RemainingWidth / 2 }}
             initialPosition={{ x: -SideMenuWidth }}
           >
-            <TOC style={styles.sideMenu} onNavPress={this._onNavPress} toc={this.state.toc} />
+            <TOC
+              style={styles.sideMenu}
+              bookId={this.props.bookId}
+              initSelectedSrc={this.initalPage}
+              onNavPress={this._onNavPress}
+              toc={this.state.toc}
+            />
           </Interactable.View>
         </View>
 

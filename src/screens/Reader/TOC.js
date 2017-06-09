@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, WebView, ScrollView, TouchableNativeFeedback, B
 import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
 
-import { getReadHisotry } from '../../data';
+import { saveReadProgress } from '../../data/dataBase';
 import { px2dp } from '../../utils';
 
 const TESTDIR = '/data/user/0/com.gitbookreader/files/download/siddontang-leetcode-solution';
@@ -19,10 +19,8 @@ export default class TOC extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    console.log('TOC constructor!!!');
-
     this.state = {
-      selectedUrl: 'index.html',
+      selectedUrl: props.initSelectedSrc,
     };
   }
 
@@ -30,6 +28,9 @@ export default class TOC extends React.PureComponent {
     this.setState({
       selectedUrl: src,
     });
+
+    // 保存阅读进度
+    saveReadProgress(this.props.bookId, src);
 
     this.props.onNavPress && this.props.onNavPress(src);
   };
