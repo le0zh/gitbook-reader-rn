@@ -22,7 +22,7 @@ export default class Empty extends React.PureComponent {
     return (
       <View style={styles.wrapper}>
         <Image style={styles.logo} source={require('../../img/logo.png')} />
-        <Text>Gitbook Reader v1.0.0</Text>
+        <Text>Gitbook Reader v1.0.0 @le0zh</Text>
       </View>
     );
   }
