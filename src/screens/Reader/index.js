@@ -44,6 +44,7 @@ export default class Empty extends React.PureComponent {
         icon: require('../../img/toc.png'), // if you want an image button
         id: 'toc', // id of the button which will pass to your press event handler. See the section bellow for Android specific button ids
         buttonColor: '#fff', // Set color for the button (can also be used in setButtons function to set different button style programatically)
+        buttonFontSize: 20,
       },
     ],
   };
@@ -82,9 +83,13 @@ export default class Empty extends React.PureComponent {
   }
 
   _loadContent = src => {
+    // 修改页面样式
+    // todo: 修改字体大小，默认为 font-size: 1.125em;
+    const fixedStyle = ' style="padding: 0 10px;" ';
+
     RNFS.readFile(`${this.bookDir}/content/${src}`).then(content => {
       this.setState({
-        content,
+        content: content.replace('<body ', `<body ${fixedStyle} `),
       });
     });
   };
@@ -104,7 +109,7 @@ export default class Empty extends React.PureComponent {
     }
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.wrapper}>
         <WebView
           source={{
             html: this.state.content,
@@ -132,6 +137,11 @@ export default class Empty extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+
   touchArea: {
     height: 100,
     width: 100,
