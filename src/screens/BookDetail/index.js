@@ -8,6 +8,7 @@ import { px2dp, SCREEN_WIDTH } from '../../utils';
 import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 import Badge from './Badge';
 import Readme from './Readme';
+import { getBook } from '../../data';
 import { checkIsDownloadOrNot } from '../../data/dataBase';
 import { downloadAsync } from '../../data/bookFiles';
 
@@ -29,10 +30,22 @@ export default class BookDetail extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    console.log(props.book);
+
     this.state = {
       downloading: false,
       downloaded: false,
+      book: props.book,
     };
+  }
+
+  componentDidMount() {
+    if (this.props.fromSearch) {
+      // 如果是从搜索页面来的，则只有book id，需要再获取一下书的详细信息
+      getBook(this.props.id).then(res => {
+        this.setState({ book: res });
+      });
+    }
   }
 
   _readOnline = () => {
@@ -127,7 +140,11 @@ export default class BookDetail extends React.PureComponent {
   };
 
   render() {
-    const { book } = this.props;
+    const { book } = this.state;
+
+    if (book === null) {
+      return <Text>Loading</Text>;
+    }
 
     const isDownloaded = checkIsDownloadOrNot(book.id);
 

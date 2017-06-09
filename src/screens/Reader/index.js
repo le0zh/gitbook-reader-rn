@@ -85,9 +85,13 @@ export default class Empty extends React.PureComponent {
     // todo: 修改字体大小，默认为 font-size: 1.125em;
     const fixedStyle = ' style="padding: 0 10px;" ';
 
+    const fixedMeta = '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">';
+
     RNFS.readFile(`${this.bookDir}/content/${src}`).then(content => {
       this.setState({
-        content: content.replace('<body ', `<body ${fixedStyle} `),
+        content: content
+          // .replace('<meta content="" name="description">', fixedMeta)
+          .replace('<body ', `<body ${fixedStyle} `),
       });
     });
   };

@@ -22,17 +22,10 @@ Navigation.startTabBasedApp({
     },
     {
       label: 'Search',
-      screen: 'app.Empty', // this is a registered name for a screen
+      screen: 'app.Search', // this is a registered name for a screen
       icon: require('./src/img/search.png'),
       selectedIcon: require('./src/img/search.png'), // iOS only
       title: 'Search',
-    },
-    {
-      label: 'Hisotry',
-      screen: 'app.History',
-      icon: require('./src/img/history.png'),
-      selectedIcon: require('./src/img/history.png'), // iOS only
-      title: 'Hisotry',
     },
     {
       label: 'Download',
@@ -40,6 +33,13 @@ Navigation.startTabBasedApp({
       icon: require('./src/img/download.png'),
       selectedIcon: require('./src/img/download.png'), // iOS only
       title: 'Download',
+    },
+    {
+      label: 'More',
+      screen: 'app.More',
+      icon: require('./src/img/more.png'),
+      selectedIcon: require('./src/img/more.png'), // iOS only
+      title: 'More',
     },
   ],
   appStyle: {

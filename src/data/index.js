@@ -19,12 +19,12 @@ exports.get = function get(api, params) {
     });
 };
 
-export function getNewsForCategory(category, page) {
-  return fetch(`http://gank.io/api/data/${category}/10/${page}`).then(res => res.json());
-}
-
 export function getAllBooks(page) {
   return fetch(`https://api.gitbook.com/books/all?limit=10&page=${page}`).then(res => res.json());
+}
+
+export function getBook(id) {
+  return fetch(`https://api.gitbook.com/book/${id}`).then(res => res.json());
 }
 
 const historyKey = id => `@history#${id}`;

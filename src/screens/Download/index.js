@@ -54,7 +54,6 @@ export default class Download extends React.PureComponent {
   };
 
   _renderItem = ({ item }) => {
-    console.log(item.downloadAt);
     return (
       <Book
         onPress={() => this._readLocal(item)}

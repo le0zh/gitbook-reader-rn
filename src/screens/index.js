@@ -4,10 +4,10 @@ import Home from './Home';
 import BookDetail from './BookDetail';
 import OnlineReader from './OnlineReader';
 import CoverHeader from './BookDetail/CoverHeader';
-import History from './History';
+import More from './More';
 import Reader from './Reader';
 import Download from './Download';
-import Empty from './Empty';
+import Search from './Search';
 
 // register all screens of the app (including internal ones)
 export function registerScreens() {
@@ -15,8 +15,8 @@ export function registerScreens() {
   Navigation.registerComponent('app.BookDetail', () => BookDetail);
   Navigation.registerComponent('app.BookDetail.Cover', () => CoverHeader);
   Navigation.registerComponent('app.OnlineReader', () => OnlineReader);
-  Navigation.registerComponent('app.History', () => History);
+  Navigation.registerComponent('app.More', () => More);
   Navigation.registerComponent('app.Reader', () => Reader);
   Navigation.registerComponent('app.Download', () => Download);
-  Navigation.registerComponent('app.Empty', () => Empty);
+  Navigation.registerComponent('app.Search', () => Search);
 }

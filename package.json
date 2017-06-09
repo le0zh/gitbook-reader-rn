@@ -8,7 +8,7 @@
     "bundle": "react-native bundle --platform android --dev false --entry-file index.android.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/"
   },
   "dependencies": {
-    "fast-xml-parser": "^2.4.3",
+    "fast-xml-parser": "^2.4.4",
     "flow-bin": "^0.42.0",
     "moment": "^2.18.1",
     "react": "16.0.0-alpha.6",
