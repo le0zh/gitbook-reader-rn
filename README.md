@@ -10,7 +10,11 @@
 
 ### 截屏
 
-![qr](./docs/screen1.png)
+![screen1](./docs/screen1.png)
+
+![screen2](./docs/screen2.png)
+
+![screen3](./docs/screen3.png)
 
 ### 主要功能
 
