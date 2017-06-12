@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback, ActivityIndicator } from 'react-native';
 
 import moment from 'moment';
 import RNFS from 'react-native-fs';
@@ -29,8 +29,6 @@ export default class BookDetail extends React.PureComponent {
 
   constructor(props) {
     super(props);
-
-    console.log(props.book);
 
     this.state = {
       downloading: false,
@@ -62,7 +60,7 @@ export default class BookDetail extends React.PureComponent {
       // title: item.title, // navigation bar title of the pushed screen (optional)
       // titleImage: require('../../img/ic_news.png'), //navigation bar title image instead of the title text of the pushed screen (optional)
       passProps: {
-        url: this.props.book.urls.read,
+        url: this.state.book.urls.read,
       }, // Object that will be passed as props to the pushed screen (optional)
       animated: true, // does the push have transition animation or does it happen immediately (optional)
       backButtonTitle: '返回', // override the back button title (optional)
@@ -74,7 +72,7 @@ export default class BookDetail extends React.PureComponent {
   };
 
   _readLocal = () => {
-    const { book } = this.props;
+    const { book } = this.state;
 
     this.props.navigator.push({
       screen: 'app.Reader', // unique ID registered with Navigation.registerScreen
@@ -102,7 +100,7 @@ export default class BookDetail extends React.PureComponent {
       text: 'Start to download',
     });
 
-    const { book } = this.props;
+    const { book } = this.state;
 
     this.setState({
       downloading: true,
@@ -150,7 +148,9 @@ export default class BookDetail extends React.PureComponent {
     const { book } = this.state;
 
     if (book === null) {
-      return <Text>Loading</Text>;
+      return <View style={{flex: 1, paddingTop: 20, justifyContent: 'flex-start', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>;
     }
 
     const isDownloaded = checkIsDownloadOrNot(book.id);

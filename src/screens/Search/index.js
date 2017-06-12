@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    height: px2dp(100),
+    height: px2dp(110),
     width: SCREEN_WIDTH - 20,
     backgroundColor: '#C5CAE9',
     color: '#fff',
