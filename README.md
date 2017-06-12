@@ -6,7 +6,7 @@
 
 ### Android版本下载
 
-![qr][./docs/qr.png]
+![qr](./docs/qr.png)
 
 ### 截屏
 
