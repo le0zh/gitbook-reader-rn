@@ -65,7 +65,7 @@ export default class Home extends React.Component {
         navigator={this.props.navigator}
         renderItem={this._renderItem}
         fetchData={getAllBooks}
-        keyExtractor={item=>item.id}
+        keyExtractor={item => item.id}
       />
     );
   }

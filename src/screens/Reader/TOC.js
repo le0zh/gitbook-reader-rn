@@ -7,8 +7,6 @@ import fastXmlParser from 'fast-xml-parser';
 import { saveReadProgress } from '../../data/dataBase';
 import { px2dp } from '../../utils';
 
-const TESTDIR = '/data/user/0/com.gitbookreader/files/download/siddontang-leetcode-solution';
-
 export default class TOC extends React.PureComponent {
   static navigatorStyle = {
     tabBarHidden: false,
@@ -94,8 +92,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#e9e9e9',
-    backgroundColor: '#C5CAE9',
+    borderBottomColor: '#0000004D',
+    backgroundColor: '#eee',
   },
 
   title1: {

@@ -10,7 +10,7 @@ import Badge from './Badge';
 import Readme from './Readme';
 import { getBook } from '../../data';
 import { checkIsDownloadOrNot } from '../../data/dataBase';
-import { downloadAsync } from '../../data/bookFiles';
+import { downloadAsync, checkIsDownloadingOrNot } from '../../data/bookFiles';
 
 export default class BookDetail extends React.PureComponent {
   static navigatorStyle = {
@@ -37,15 +37,23 @@ export default class BookDetail extends React.PureComponent {
       downloaded: false,
       book: props.book,
     };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
+    this._isMounted = true;
+
     if (this.props.fromSearch) {
       // 如果是从搜索页面来的，则只有book id，需要再获取一下书的详细信息
       getBook(this.props.id).then(res => {
         this.setState({ book: res });
       });
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   _readOnline = () => {
@@ -101,15 +109,16 @@ export default class BookDetail extends React.PureComponent {
     });
 
     downloadAsync(book).then(res => {
-      console.log(res.statusCode, res.jobId, res.bytesWritten);
-      this.setState({
-        downloading: false,
-        downloaded: true,
-      });
+      if (this._isMounted) {
+        this.setState({
+          downloading: false,
+          downloaded: true,
+        });
+      }
     });
   };
 
-  _renderDownloadButton = isDownloaded => {
+  _renderDownloadButton = (isDownloaded, isDownLoading) => {
     if (isDownloaded) {
       return (
         <TouchableNativeFeedback onPress={this._readLocal}>
@@ -120,20 +129,18 @@ export default class BookDetail extends React.PureComponent {
       );
     }
 
-    if (this.state.downloaded) {
+    if (isDownLoading) {
       return (
-        <TouchableNativeFeedback onPress={this._readLocal}>
-          <View style={styles.button}>
-            <Text style={styles.buttonText}>Downloaded</Text>
-          </View>
-        </TouchableNativeFeedback>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>Downloading</Text>
+        </View>
       );
     }
 
     return (
       <TouchableNativeFeedback onPress={this._download}>
         <View style={styles.button}>
-          <Text style={styles.buttonText}>{this.state.downloading ? 'Downloading' : 'Download'}</Text>
+          <Text style={styles.buttonText}>Download</Text>
         </View>
       </TouchableNativeFeedback>
     );
@@ -147,6 +154,7 @@ export default class BookDetail extends React.PureComponent {
     }
 
     const isDownloaded = checkIsDownloadOrNot(book.id);
+    const isDownLoading = checkIsDownloadingOrNot(book.id);
 
     return (
       <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.contentContainer}>
@@ -164,7 +172,7 @@ export default class BookDetail extends React.PureComponent {
               <View style={styles.button}><Text style={styles.buttonText}>Read Online</Text></View>
             </TouchableNativeFeedback>
 
-            {this._renderDownloadButton(isDownloaded)}
+            {this._renderDownloadButton(isDownloaded, isDownLoading)}
           </View>
         </View>
 

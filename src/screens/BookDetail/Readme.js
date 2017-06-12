@@ -40,6 +40,8 @@ export default class ReadMe extends React.PureComponent {
       content: '',
       webViewHeight: 300,
     };
+
+    this._isMounted = false;
   }
 
   componentDidMount() {
@@ -49,11 +51,17 @@ export default class ReadMe extends React.PureComponent {
         content: res.sections[0].content.replaceAll('<a', '<span ').replaceAll('/a>', '/span>'),
       });
     });
+
+    this._isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   _onMessage = e => {
     const newHeight = parseInt(e.nativeEvent.data, 10) + 100;
-    if (this.state.webViewHeight !== newHeight) {
+    if (this._isMounted && this.state.webViewHeight !== newHeight) {
       this.setState({
         webViewHeight: newHeight,
       });

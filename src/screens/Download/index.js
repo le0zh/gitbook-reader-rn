@@ -24,8 +24,6 @@ export default class Download extends React.PureComponent {
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
   }
 
-  componentDidMount() {}
-
   onNavigatorEvent(event) {
     if (event.id == 'bottomTabSelected') {
       this.feeds.refresh();
@@ -48,9 +46,8 @@ export default class Download extends React.PureComponent {
   };
 
   _deleteOneItem = bookId => {
-    // todo: remove this after test
-    // deleteOneDownloadItem(bookId);
     this.feeds.removeOne(item => item.bookId === bookId);
+    deleteOneDownloadItem(bookId);
   };
 
   _renderItem = ({ item }) => {

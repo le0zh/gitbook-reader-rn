@@ -26,12 +26,29 @@ const AnimatedToc = Animated.createAnimatedComponent(TOC);
 const SideMenuWidth = SCREEN_WIDTH * 4 / 5;
 const RemainingWidth = SCREEN_WIDTH - SideMenuWidth;
 
+const injectedScript = `
+function ready(fn) {
+  if (document.readyState != 'loading'){
+    fn();
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', fn);
+  } else {
+    document.attachEvent('onreadystatechange', function() {
+      if (document.readyState != 'loading')
+        fn();
+    });
+  }
+}
+
+ready(function(){
+  setTimeout(function(){window.scrollTo(0, -100);}, 0);
+})
+`;
+
 export default class Empty extends React.PureComponent {
   static navigatorStyle = {
     tabBarHidden: true,
-    navBarHideOnScroll: false,
-    navBarBackgroundColor: '#3F51B5',
-    navBarTextColor: '#fff',
+    navBarHideOnScroll: true,
     statusBarColor: '#3F51B5',
     navBarTitleTextCentered: true,
   };
@@ -41,10 +58,8 @@ export default class Empty extends React.PureComponent {
     leftButtons: [
       {
         title: 'TOC', // if you want a textual button
-        icon: require('../../img/toc.png'), // if you want an image button
-        id: 'toc', // id of the button which will pass to your press event handler. See the section bellow for Android specific button ids
-        buttonColor: '#fff', // Set color for the button (can also be used in setButtons function to set different button style programatically)
-        buttonFontSize: 20,
+        buttonColor: '#fff',
+        id: 'sideMenu', // id of the button which will pass to your press event handler. See the section bellow for Android specific button ids
       },
     ],
   };
@@ -74,7 +89,7 @@ export default class Empty extends React.PureComponent {
 
   onNavigatorEvent(event) {
     if (event.type == 'NavBarButtonPress') {
-      if (event.id == 'toc') {
+      if (event.id == 'sideMenu') {
         this.interactableView.setVelocity({ x: 2000 });
       }
     }
@@ -83,8 +98,7 @@ export default class Empty extends React.PureComponent {
   _loadContent = src => {
     // 修改页面样式
     // todo: 修改字体大小，默认为 font-size: 1.125em;
-    const fixedStyle = ' style="padding: 0 10px;" ';
-
+    const fixedStyle = ' style="padding: 0 10px; font-size: 1em" ';
     const fixedMeta = '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">';
 
     RNFS.readFile(`${this.bookDir}/content/${src}`).then(content => {
@@ -119,6 +133,7 @@ export default class Empty extends React.PureComponent {
           }}
           startInLoadingState
           style={styles.webView}
+          injectedJavaScript={injectedScript}
         />
 
         <View style={styles.sideMenuContainer} pointerEvents="box-none">
@@ -183,8 +198,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: SCREEN_WIDTH,
     paddingLeft: RemainingWidth,
-    flex: 1,
-    backgroundColor: '#C5CAE9',
+    backgroundColor: '#eee',
     paddingTop: 0,
     elevation: 5,
   },

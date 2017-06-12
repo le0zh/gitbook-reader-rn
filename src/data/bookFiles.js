@@ -6,6 +6,9 @@ import { saveDownloadItem } from './dataBase';
 
 const MyNativeModule = NativeModules.MyNativeModule;
 
+// 保存下载列表
+const downloadingBooks = new Set();
+
 /**
  * 确保目标文件夹存在
  */
@@ -49,24 +52,10 @@ function executeDownloadFlow(DIR, book) {
       // 保存下载记录
       saveDownloadItem(book.id, book.title, book.cover.small, res.bytesWritten);
 
+      // 从下载中列表移除
+      downloadingBooks.delete(book.id);
+
       return downloadRes;
-
-      // book.size = res.bytesWritten;
-      // book.downloadDate = Date.now();
-
-      // // 2.保存meta.json
-      // return RNFS.writeFile(`${DIR}/meta.json`, JSON.stringify(book), 'utf8').then(success => {
-      //   console.log(`${book.id} meta FILE WRITTEN!`);
-
-      //   // 解压并生成目录文件
-      //   unzip(book.id);
-
-      //   // 保存下载记录
-      //   saveDownloadItem(book.id, book.title, book.cover.small, res.bytesWritten);
-
-      //   // 将下载的结果返回出去
-      //   return res;
-      // });
     })
     .catch(err => {
       console.warn(err.message);
@@ -86,9 +75,19 @@ export function getDirFromBookId(bookId) {
 export function downloadAsync(book) {
   const DIR = getDirFromBookId(book.id);
 
+  downloadingBooks.add(book.id);
+
   return makeSureDirExist(DIR).then(() => {
     return executeDownloadFlow(DIR, book);
   });
+}
+
+/**
+ * 检测指定书籍是否在下载中
+ * @param {string} bookId 
+ */
+export function checkIsDownloadingOrNot(bookId) {
+  return downloadingBooks.has(bookId);
 }
 
 /**
