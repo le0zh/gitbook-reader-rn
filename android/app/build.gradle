@@ -139,6 +139,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-camera')
     compile project(':react-native-interactable')
     compile project(':realm')
     compile project(':react-native-fs')

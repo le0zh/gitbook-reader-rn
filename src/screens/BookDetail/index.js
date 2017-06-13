@@ -46,6 +46,9 @@ export default class BookDetail extends React.PureComponent {
       // 如果是从搜索页面来的，则只有book id，需要再获取一下书的详细信息
       getBook(this.props.id).then(res => {
         this.setState({ book: res });
+        this.props.navigator.setTitle({
+          title: res.title,
+        });
       });
     }
   }
@@ -148,9 +151,11 @@ export default class BookDetail extends React.PureComponent {
     const { book } = this.state;
 
     if (book === null) {
-      return <View style={{flex: 1, paddingTop: 20, justifyContent: 'flex-start', alignItems: 'center'}}>
-        <ActivityIndicator size="large" />
-      </View>;
+      return (
+        <View style={{ flex: 1, paddingTop: 20, justifyContent: 'flex-start', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
     }
 
     const isDownloaded = checkIsDownloadOrNot(book.id);

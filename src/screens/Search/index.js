@@ -1,5 +1,7 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableNativeFeedback } from 'react-native';
+
+import Camera from 'react-native-camera';
 
 import { search } from '../../data/search';
 import { px2dp, SCREEN_WIDTH } from '../../utils';
@@ -69,6 +71,13 @@ export default class Search extends React.PureComponent {
     return { length: ITEM_HEIGHT, offset: ITEM_HEIGHT * index, index };
   };
 
+  _doScan = () => {
+    this.props.navigator.push({
+      screen: 'app.Camera', // unique ID registered with Navigation.registerScreen
+      title: 'QR',
+    });
+  };
+
   _renderSearchResult = () => {
     return (
       <Feeds
@@ -96,6 +105,9 @@ export default class Search extends React.PureComponent {
             returnKeyType="search"
             inlineImageLeft="search"
           />
+          <TouchableNativeFeedback onPress={this._doScan}>
+            <Image style={styles.scanIcon} source={require('../../img/scan.png')} />
+          </TouchableNativeFeedback>
         </View>
 
         {this.state.mode === 'show' ? this._renderSearchResult() : null}
@@ -113,21 +125,34 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
   },
 
+  preview: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
+
   textInputWrapper: {
     backgroundColor: '#3F51B5',
     width: SCREEN_WIDTH,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     alignItems: 'center',
+    flexDirection: 'row',
     height: px2dp(150),
   },
 
   input: {
     height: px2dp(110),
-    width: SCREEN_WIDTH - 20,
+    marginLeft: 5,
+    width: SCREEN_WIDTH - 70,
     backgroundColor: '#C5CAE9',
     color: '#fff',
     // borderColor: 'gray',
     // borderWidth: 1,
     borderRadius: 4,
+  },
+
+  scanIcon: {
+    height: 40,
+    width: 40,
   },
 });

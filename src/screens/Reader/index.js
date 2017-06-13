@@ -48,9 +48,12 @@ ready(function(){
 export default class Empty extends React.PureComponent {
   static navigatorStyle = {
     tabBarHidden: true,
-    navBarHideOnScroll: true,
+    // navBarHideOnScroll: true,
     statusBarColor: '#3F51B5',
     navBarTitleTextCentered: true,
+    navBarButtonColor: '#fff',
+    navBarBackgroundColor: '#3F51B5',
+    navBarTextColor: '#fff',
   };
 
   static navigatorButtons = {
