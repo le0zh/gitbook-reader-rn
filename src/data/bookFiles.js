@@ -132,3 +132,16 @@ function unzip(bookId) {
 
   makeSureDirExist(contentDir).then(doUnzip);
 }
+
+// 删除书籍文件
+export function deleteBoookFile(bookId) {
+  const DIR = getDirFromBookId(bookId);
+
+  RNFS.unlink(DIR)
+    .then(() => {
+      console.log(`${bookId} FILE DELETED`);
+    })
+    .catch(err => {
+      console.log(err.message);
+    });
+}

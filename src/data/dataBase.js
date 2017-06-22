@@ -1,6 +1,7 @@
 // @flow
 
 import Realm from 'realm';
+import { deleteBoookFile } from './bookFiles';
 
 /**
  * 阅读记录
@@ -105,6 +106,8 @@ export function deleteOneDownloadItem(bookId: string) {
       realm.delete(books[0]);
     });
   }
+
+  deleteBoookFile(bookId);
 }
 
 /**
