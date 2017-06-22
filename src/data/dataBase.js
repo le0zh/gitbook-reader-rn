@@ -42,10 +42,19 @@ const ProgressSchema = {
     bookId: 'string', // 书的id
     src: 'string', // 阅读的文件
     readAt: 'date', // 阅读时间
+    position: { type: 'int', default: 0, optional: true }, // 阅读位置
   },
 };
 
-const realm = new Realm({ schema: [HistorySchema, DownloadSchema, ProgressSchema] });
+const realm = new Realm({
+  schema: [HistorySchema, DownloadSchema, ProgressSchema],
+  schemaVersion: 2,
+  // migration: (oldRealm, newRealm) => {
+  //   if (oldRealm.schemaVersion < 2) {
+
+  //   }
+  // },
+});
 
 /**
  * 保存下载记录
@@ -112,13 +121,11 @@ export function deleteOneDownloadItem(bookId: string) {
 
 /**
  * 保存阅读进度
- * @param {string} bookId
- * @param {string} src 
  */
-export function saveReadProgress(bookId: string, src: string) {
+export function saveReadProgress(bookId: string, src: string, pos: number) {
   realm.write(() => {
     // 第三个参数true表示，当前主键已经存在时，直接更新， 否则创建
-    realm.create('Progress', { bookId, src, readAt: new Date() }, true);
+    realm.create('Progress', { bookId, src, readAt: new Date(), position: pos }, true);
   });
 }
 
@@ -126,13 +133,19 @@ export function saveReadProgress(bookId: string, src: string) {
  * 获取阅读进度，当前只是文件级别
  * @param {string} bookId 
  */
-export function getReadPreogress(bookId: string): string {
+export function getReadProgress(bookId: string): { src: string, position: number } {
   let books = realm.objects('Progress').filtered(`bookId = "${bookId}"`);
 
   if (books.length > 0) {
-    return books[0].src;
+    return {
+      src: books[0].src,
+      position: books[0].position,
+    };
   }
 
   // 没有阅读进度，返回首页
-  return 'index.html';
+  return {
+    src: 'index.html',
+    position: -100,
+  };
 }

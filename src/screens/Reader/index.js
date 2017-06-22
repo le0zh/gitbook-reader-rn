@@ -16,7 +16,7 @@ import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
 import Interactable from 'react-native-interactable';
 
-import { getReadPreogress } from '../../data/dataBase';
+import { getReadProgress, saveReadProgress } from '../../data/dataBase';
 import { px2dp, SCREEN_HEIGHT, SCREEN_WIDTH } from '../../utils';
 import { getDirFromBookId } from '../../data/bookFiles';
 import TOC from './TOC';
@@ -26,7 +26,7 @@ const AnimatedToc = Animated.createAnimatedComponent(TOC);
 const SideMenuWidth = SCREEN_WIDTH * 4 / 5;
 const RemainingWidth = SCREEN_WIDTH - SideMenuWidth;
 
-const injectedScript = `
+const getInjectedScript = initPosition => `
 function ready(fn) {
   if (document.readyState != 'loading'){
     fn();
@@ -41,7 +41,13 @@ function ready(fn) {
 }
 
 ready(function(){
-  setTimeout(function(){window.scrollTo(0, -100);}, 0);
+  setTimeout(function(){
+    window.scrollTo(0, ${initPosition});
+  }, 0);
+
+  window.onscroll = function (e) {
+    window.postMessage(window.pageYOffset);
+  };
 })
 `;
 
@@ -77,7 +83,14 @@ export default class Empty extends React.PureComponent {
 
     this.bookDir = getDirFromBookId(this.props.bookId);
     this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-    this.initalPage = getReadPreogress(this.props.bookId);
+
+    const progress = getReadProgress(this.props.bookId);
+    this.initalPage = progress.src;
+    this.initalPos = progress.position;
+
+    this.readPos = progress.position;
+    this.readPage = progress.src;
+    this.tocIsShown = false;
   }
 
   componentDidMount() {
@@ -93,8 +106,13 @@ export default class Empty extends React.PureComponent {
   onNavigatorEvent(event) {
     if (event.type == 'NavBarButtonPress') {
       if (event.id == 'sideMenu') {
-        this.interactableView.setVelocity({ x: 2000 });
+        this.interactableView.setVelocity({ x: this.tocIsShown ? -2000 : 2000 });
       }
+    }
+
+    if (event.id === 'willDisappear') {
+      // 保存阅读进度
+      saveReadProgress(this.props.bookId, this.readPage, this.readPos);
     }
   }
 
@@ -120,6 +138,15 @@ export default class Empty extends React.PureComponent {
   _onNavPress = src => {
     this.interactableView.setVelocity({ x: -2000 });
     this._loadContent(src);
+    this.readPage = src;
+  };
+
+  _onMessage = e => {
+    this.readPos = parseInt(e.nativeEvent.data, 10);
+  };
+
+  _onSnap = e => {
+    this.tocIsShown = e.nativeEvent.index === 0;
   };
 
   render() {
@@ -136,7 +163,8 @@ export default class Empty extends React.PureComponent {
           }}
           startInLoadingState
           style={styles.webView}
-          injectedJavaScript={injectedScript}
+          injectedJavaScript={getInjectedScript(this.initalPos)}
+          onMessage={this._onMessage}
         />
 
         <View style={styles.sideMenuContainer} pointerEvents="box-none">
@@ -146,6 +174,7 @@ export default class Empty extends React.PureComponent {
             snapPoints={[{ x: 0 }, { x: -SideMenuWidth }]}
             boundaries={{ right: RemainingWidth / 2 }}
             initialPosition={{ x: -SideMenuWidth }}
+            onSnap={this._onSnap}
           >
             <TOC
               style={styles.sideMenu}

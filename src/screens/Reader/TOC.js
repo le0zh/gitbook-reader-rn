@@ -27,9 +27,6 @@ export default class TOC extends React.PureComponent {
       selectedUrl: src,
     });
 
-    // 保存阅读进度
-    saveReadProgress(this.props.bookId, src);
-
     this.props.onNavPress && this.props.onNavPress(src);
   };
 
