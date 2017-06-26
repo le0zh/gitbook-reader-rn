@@ -16,6 +16,10 @@ export default class Home extends React.Component {
     navBarTextColor: '#fff',
     statusBarColor: '#3F51B5',
     navBarTitleTextCentered: true,
+    statusBarTextColorScheme: 'light',
+
+    // iOS only
+    statusBarHideWithNavBar: true,
   };
 
   constructor(props) {

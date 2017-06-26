@@ -1,5 +1,15 @@
 import React from 'react';
-import { Image, ScrollView, View, Text, StyleSheet, TouchableNativeFeedback, ActivityIndicator } from 'react-native';
+import {
+  AlertIOS,
+  Image,
+  ScrollView,
+  View,
+  Platform,
+  Text,
+  StyleSheet,
+  TouchableHighlight,
+  ActivityIndicator,
+} from 'react-native';
 
 import moment from 'moment';
 import RNFS from 'react-native-fs';
@@ -92,16 +102,22 @@ export default class BookDetail extends React.PureComponent {
 
   _download = () => {
     if (this.state.downloading) {
-      this.props.navigator.showSnackbar({
-        text: 'downloading',
-      });
+      if (Platform.OS === 'ios') {
+        AlertIOS.alert('message', downloading);
+      } else if (Platform.OS === 'android') {
+        this.props.navigator.showSnackbar({
+          text: 'downloading',
+        });
+      }
 
       return;
     }
 
-    this.props.navigator.showSnackbar({
-      text: 'Start to download',
-    });
+    if (Platform.OS === 'android') {
+      this.props.navigator.showSnackbar({
+        text: 'Start to download',
+      });
+    }
 
     const { book } = this.state;
 
@@ -122,11 +138,11 @@ export default class BookDetail extends React.PureComponent {
   _renderDownloadButton = (isDownloaded, isDownLoading) => {
     if (isDownloaded) {
       return (
-        <TouchableNativeFeedback onPress={this._readLocal}>
+        <TouchableHighlight onPress={this._readLocal}>
           <View style={[styles.button, { backgroundColor: '#C5CAE9' }]}>
             <Text style={styles.buttonText}>Read Local</Text>
           </View>
-        </TouchableNativeFeedback>
+        </TouchableHighlight>
       );
     }
 
@@ -139,11 +155,11 @@ export default class BookDetail extends React.PureComponent {
     }
 
     return (
-      <TouchableNativeFeedback onPress={this._download}>
+      <TouchableHighlight onPress={this._download}>
         <View style={styles.button}>
           <Text style={styles.buttonText}>Download</Text>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableHighlight>
     );
   };
 
@@ -173,9 +189,9 @@ export default class BookDetail extends React.PureComponent {
           </View>
 
           <View style={styles.buttons}>
-            <TouchableNativeFeedback onPress={this._readOnline}>
+            <TouchableHighlight onPress={this._readOnline}>
               <View style={styles.button}><Text style={styles.buttonText}>Read Online</Text></View>
-            </TouchableNativeFeedback>
+            </TouchableHighlight>
 
             {this._renderDownloadButton(isDownloaded, isDownLoading)}
           </View>

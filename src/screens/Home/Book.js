@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { Image, View, Text, StyleSheet, TouchableNativeFeedback, TouchableHighlight, Platform } from 'react-native';
 import moment from 'moment';
 
 import { px2dp, SCREEN_WIDTH } from '../../utils';
@@ -10,34 +10,50 @@ import ImageWithPlaceHolder from '../../components/ImageWithPlaceHolder';
 // <View style={styles.label}><Text>{this.props.language}</Text></View>
 
 export default class NewsCard extends React.PureComponent {
-  render() {
+  renderContent = () => {
     return (
-      <TouchableNativeFeedback onPress={this.props.onPress}>
-        <View style={styles.row}>
-          <View style={styles.cover}>
-            <ImageWithPlaceHolder
-              style={styles.coverImage}
-              placeHolderSource={require('../../img/default-cover.png')}
-              source={{ uri: `http://www.gitbook.com${this.props.cover.small}` }}
-            />
-          </View>
-          <View style={styles.content}>
-            <Text style={styles.title}>{this.props.title}</Text>
+      <View style={styles.row}>
+        <View style={styles.cover}>
+          <ImageWithPlaceHolder
+            style={styles.coverImage}
+            placeHolderSource={require('../../img/default-cover.png')}
+            source={{ uri: `http://www.gitbook.com${this.props.cover.small}` }}
+          />
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.title}>{this.props.title}</Text>
 
-            <Text numberOfLines={2} ellipsizeMode="tail" style={styles.desc}>
-              {this.props.description === '' ? 'No description for now' : this.props.description}
-            </Text>
+          <Text numberOfLines={2} ellipsizeMode="tail" style={styles.desc}>
+            {this.props.description === '' ? 'No description for now' : this.props.description}
+          </Text>
 
-            <Text>Last updated {moment(this.props.dates.build).fromNow()}</Text>
+          <Text>Last updated {moment(this.props.dates.build).fromNow()}</Text>
 
-            <View style={styles.infoWrapper}>
-              <View style={styles.label}><Text>★ {this.props.counts.stars}</Text></View>
-              <View style={styles.label}><Text>{this.props.language}</Text></View>
+          <View style={styles.infoWrapper}>
+            <View style={styles.label}>
+              <Text>★ {this.props.counts.stars}</Text>
             </View>
+            <View style={styles.label}><Text>{this.props.language}</Text></View>
           </View>
         </View>
-      </TouchableNativeFeedback>
+      </View>
     );
+  };
+
+  render() {
+    if (Platform.OS === 'ios') {
+      return (
+        <TouchableHighlight onPress={this.props.onPress}>
+          {this.renderContent()}
+        </TouchableHighlight>
+      );
+    } else if (Platform.OS === 'android') {
+      return (
+        <TouchableNativeFeedback onPress={this.props.onPress}>
+          {this.renderContent()}
+        </TouchableNativeFeedback>
+      );
+    }
   }
 }
 

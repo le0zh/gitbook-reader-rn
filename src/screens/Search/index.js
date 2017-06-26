@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TextInput, TouchableNativeFeedback } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native';
 
 import Camera from 'react-native-camera';
 
@@ -105,9 +105,9 @@ export default class Search extends React.PureComponent {
             returnKeyType="search"
             inlineImageLeft="search"
           />
-          <TouchableNativeFeedback onPress={this._doScan}>
+          <TouchableHighlight onPress={this._doScan}>
             <Image style={styles.scanIcon} source={require('../../img/scan.png')} />
-          </TouchableNativeFeedback>
+          </TouchableHighlight>
         </View>
 
         {this.state.mode === 'show' ? this._renderSearchResult() : null}
