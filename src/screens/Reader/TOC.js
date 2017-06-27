@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, WebView, ScrollView, TouchableNativeFeedback, BackAndroid } from 'react-native';
+import { View, Text, StyleSheet, WebView, ScrollView, TouchableHighlight, BackAndroid } from 'react-native';
 
 import RNFS from 'react-native-fs';
 import fastXmlParser from 'fast-xml-parser';
@@ -53,7 +53,7 @@ export default class TOC extends React.PureComponent {
     }
 
     return (
-      <TouchableNativeFeedback key={item._id} onPress={() => this._onNavItemPress(item.content._src)}>
+      <TouchableHighlight key={item._id} onPress={() => this._onNavItemPress(item.content._src)}>
         <View>
           <View style={styles.tocItem}>
             <Text style={[styles.title1, { color: textColor, marginLeft: 30 * level }]}>
@@ -62,7 +62,7 @@ export default class TOC extends React.PureComponent {
           </View>
           {subItems}
         </View>
-      </TouchableNativeFeedback>
+      </TouchableHighlight>
     );
   };
 

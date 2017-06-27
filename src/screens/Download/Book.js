@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { Image, View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
 import moment from 'moment';
 import Interactable from 'react-native-interactable';
@@ -27,7 +27,7 @@ export default class NewsCard extends React.PureComponent {
   render() {
     return (
       <RowWithActions height={px2dp(380)} onTrash={this.props.remove}>
-        <TouchableNativeFeedback onPress={this.props.onPress}>
+        <TouchableHighlight onPress={this.props.onPress}>
           <View style={styles.row}>
             <View style={styles.cover}>
               <ImageWithPlaceHolder
@@ -46,7 +46,7 @@ export default class NewsCard extends React.PureComponent {
               <Text>Downloaded at {moment(this.props.downloadAt).fromNow()}</Text>
             </View>
           </View>
-        </TouchableNativeFeedback>
+        </TouchableHighlight>
       </RowWithActions>
     );
   }
