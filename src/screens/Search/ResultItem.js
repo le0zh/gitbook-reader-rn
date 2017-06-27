@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { Image, View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
 import moment from 'moment';
 
@@ -8,12 +8,12 @@ import { px2dp, SCREEN_WIDTH } from '../../utils';
 export default class ResultItem extends React.PureComponent {
   render() {
     return (
-      <TouchableNativeFeedback onPress={this.props.onPress}>
+      <TouchableHighlight onPress={this.props.onPress}>
         <View style={styles.row}>
           <Text style={styles.title}>{this.props.title}</Text>
           <Text style={styles.desc} numberOfLines={2}>{this.props.desc}</Text>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableHighlight>
     );
   }
 }
@@ -33,11 +33,11 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: px2dp(46),
+    fontSize: 18,
     color: '#000',
   },
 
   desc: {
-    fontSize: px2dp(34),
+    fontSize: 16,
   },
 });

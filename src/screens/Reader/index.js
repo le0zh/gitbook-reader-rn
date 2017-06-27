@@ -60,6 +60,10 @@ export default class Empty extends React.PureComponent {
     navBarButtonColor: '#fff',
     navBarBackgroundColor: '#3F51B5',
     navBarTextColor: '#fff',
+    statusBarTextColorScheme: 'light',
+
+    // iOS only
+    statusBarHideWithNavBar: true,
   };
 
   static navigatorButtons = {

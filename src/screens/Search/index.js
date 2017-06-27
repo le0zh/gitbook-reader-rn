@@ -13,12 +13,15 @@ const ITEM_HEIGHT = px2dp(250);
 
 export default class Search extends React.PureComponent {
   static navigatorStyle = {
-    navBarHideOnScroll: true,
+    navBarHidden: false,
     navBarBackgroundColor: '#3F51B5', // This will be the TitleBars color when the react view is hidden and collapsed
     navBarTextColor: '#fff',
     statusBarColor: '#3F51B5',
     navBarTitleTextCentered: true,
-    topBarElevationShadowEnabled: false,
+    statusBarTextColorScheme: 'light',
+
+    // iOS only
+    statusBarHideWithNavBar: true,
   };
 
   constructor(props) {
@@ -54,6 +57,7 @@ export default class Search extends React.PureComponent {
     this.props.navigator.push({
       screen: 'app.BookDetail', // unique ID registered with Navigation.registerScreen
       title: title, // navigation bar title of the pushed screen (optional)
+      backButtonTitle: '', // override the back button title (optional)
       passProps: {
         id,
         book: null,
@@ -123,6 +127,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     width: SCREEN_WIDTH,
+    backgroundColor: 'transparent',
   },
 
   preview: {
@@ -137,11 +142,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     flexDirection: 'row',
-    height: px2dp(150),
+    height: px2dp(100),
   },
 
   input: {
-    height: px2dp(110),
+    height: px2dp(90),
     marginLeft: 5,
     width: SCREEN_WIDTH - 70,
     backgroundColor: '#C5CAE9',

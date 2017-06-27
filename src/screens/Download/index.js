@@ -16,6 +16,10 @@ export default class Download extends React.PureComponent {
     statusBarColor: '#3F51B5',
     navBarTitleTextCentered: true,
     navBarTitleTextCentered: true,
+    statusBarTextColorScheme: 'light',
+
+    // iOS only
+    statusBarHideWithNavBar: true,
   };
 
   constructor(props) {

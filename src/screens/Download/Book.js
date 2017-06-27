@@ -90,16 +90,16 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: px2dp(46),
+    fontSize: 18,
     color: '#000',
   },
 
   desc: {
-    fontSize: px2dp(34),
+    fontSize: 16,
   },
 
   time: {
-    fontSize: px2dp(38),
+    fontSize: 16,
     color: '#8e8e8e',
   },
 });
